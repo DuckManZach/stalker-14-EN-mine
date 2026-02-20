@@ -226,7 +226,7 @@
   - MobFlammable
   - MobFirePat # stalker-changes - fire patting
   - BaseMobSpecies
-  id: BaseMobSpeciesOrganic
+  id: BaseMobSpeciesOrganicUpstream # stalker-changes - moved to our namespace
   abstract: true
   components:
   - type: Barotrauma
