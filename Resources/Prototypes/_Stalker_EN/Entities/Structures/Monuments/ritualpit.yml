@@ -8,9 +8,3 @@
   - type: Sprite
     sprite: /Textures/_Stalker_EN/Structures/Monuments/ritualtower.rsi
     state: ritualtower
-  - type: AmbientSound
-    enabled: true
-    range: 30
-    volume: 5
-    sound:
-      path: /Audio/_Stalker_EN/Effects/ritualpit.ogg
