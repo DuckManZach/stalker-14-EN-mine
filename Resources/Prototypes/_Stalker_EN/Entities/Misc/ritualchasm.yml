@@ -11,11 +11,10 @@
   # Chasm
   - type: RitualChasm
     throwSound: /Audio/_Stalker/Effects/springboard_blowout.ogg
-    # UNFORTUNATELY We Cant Have Nice Things, this is the sfx that plays globally when something gets relocated
-    # relocateSound:
-    #   params:
-    #     volume: -4
-    #   collection: StalkerHorrorSound
+    relocateSound:
+      params:
+        volume: -4
+      collection: StalkerHorrorSound
     relocatedLocalSound:
       params:
         volume: 8
