@@ -52,6 +52,7 @@ public sealed partial class STMessengerSystem : EntitySystem
     private const int MaxRetryCollision = 10;
     private const int MaxPseudonymSuffix = 999;
     private static readonly TimeSpan InteractionCooldown = TimeSpan.FromSeconds(0.5);
+    private static readonly ProtoId<STBandPrototype> MonolithBandId = "STMonolithBand";
 
     /// <summary>
     /// Maps (userId, charName) → anonymous pseudonym for the current round.
@@ -910,8 +911,8 @@ public sealed partial class STMessengerSystem : EntitySystem
         if (!TryComp<BandsComponent>(holder, out var bands))
             return null;
 
-        // Covert factions (CanChange = true, e.g. Monolith, Clear Sky) always appear as Loners on PDA
-        if (bands.CanChange)
+        // Covert factions (CanChange = true) appear as Loners on PDA, except Monolith who shows their real faction
+        if (bands.CanChange && bands.BandProto != MonolithBandId)
             return _factionResolution.GetBandFactionName(bands.BandName);
 
         if (bands.BandProto is not { } bandProtoId)
