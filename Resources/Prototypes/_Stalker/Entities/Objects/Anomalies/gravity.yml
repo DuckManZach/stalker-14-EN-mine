@@ -234,7 +234,7 @@
       chargingTime: 5
     - type: AmbientSound
       enabled: true
-      volume: 0
+      volume: -4
       range: 12
       sound:
         path: /Audio/_Stalker/Effects/anomaly_gravy_idle.ogg
