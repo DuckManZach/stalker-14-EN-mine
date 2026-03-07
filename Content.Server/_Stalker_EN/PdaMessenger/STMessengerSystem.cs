@@ -350,16 +350,20 @@ public sealed partial class STMessengerSystem : EntitySystem
             chatMessages.RemoveRange(0, chatMessages.Count - maxMessages);
 
         // Admin log — include anonymous pseudonym so admins can trace abuse
+        var replyInfo = send.ReplyToId is { } rid
+            ? $" (reply to #{rid}: \"{replySnippet}\")"
+            : "";
+
         if (send.IsAnonymous && !isDm)
         {
-            _adminLogger.Add(LogType.PdaMessage, LogImpact.Medium,
+            _adminLogger.Add(LogType.STMessenger, LogImpact.Medium,
                 $"{ToPrettyString(args.Actor):player} sent anonymous message " +
-                $"(as \"{displayName}\") to {chatId}: {content}");
+                $"(as \"{displayName}\") to {chatId}{replyInfo}: {content}");
         }
         else
         {
-            _adminLogger.Add(LogType.PdaMessage, LogImpact.Medium,
-                $"{ToPrettyString(args.Actor):player} sent message to {chatId}: {content}");
+            _adminLogger.Add(LogType.STMessenger, LogImpact.Medium,
+                $"{ToPrettyString(args.Actor):player} sent message to {chatId}{replyInfo}: {content}");
         }
 
         if (isDm)
@@ -496,6 +500,10 @@ public sealed partial class STMessengerSystem : EntitySystem
         AddContactAsync(server.OwnerUserId, server.OwnerCharacterName,
             contactIdentity.UserId, contactIdentity.CharName, factionName);
 
+        _adminLogger.Add(LogType.STMessenger, LogImpact.Low,
+            $"{ToPrettyString(args.Actor):player} added messenger contact " +
+            $"{contactIdentity.CharName} (ID: {add.MessengerId})");
+
         BroadcastUiUpdate();
     }
 
@@ -514,6 +522,10 @@ public sealed partial class STMessengerSystem : EntitySystem
             return;
 
         server.Contacts.Remove(remove.ContactMessengerId);
+
+        _adminLogger.Add(LogType.STMessenger, LogImpact.Low,
+            $"{ToPrettyString(args.Actor):player} removed messenger contact " +
+            $"{contactEntry.CharacterName} (ID: {remove.ContactMessengerId})");
 
         RemoveContactAsync(server.OwnerUserId, server.OwnerCharacterName,
             contactEntry.UserId, contactEntry.CharacterName);
