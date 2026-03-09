@@ -19,4 +19,16 @@ public sealed partial class STNewsCartridgeComponent : Component
     /// <summary>Earliest time this cartridge can publish again (server-side cooldown).</summary>
     [ViewVariables]
     public TimeSpan NextPublishTime;
+
+    /// <summary>Article ID currently being viewed in detail, or null if on list view.</summary>
+    [ViewVariables]
+    public int? ViewingArticleId;
+
+    /// <summary>Earliest time this cartridge can post another comment (server-side cooldown).</summary>
+    [ViewVariables]
+    public TimeSpan NextCommentTime;
+
+    /// <summary>Last-seen comment count per article ID, for "new comments" badge.</summary>
+    [ViewVariables]
+    public Dictionary<int, int> LastSeenCommentCounts = new();
 }

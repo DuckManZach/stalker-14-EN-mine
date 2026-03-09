@@ -75,6 +75,9 @@ public sealed class STNewsArticleSummary
     /// <summary>Embed accent color (RGB integer).</summary>
     public readonly int EmbedColor;
 
+    /// <summary>Number of comments on this article.</summary>
+    public readonly int CommentCount;
+
     public STNewsArticleSummary(
         int id,
         string title,
@@ -82,7 +85,8 @@ public sealed class STNewsArticleSummary
         string author,
         int roundId,
         TimeSpan publishTime,
-        int embedColor)
+        int embedColor,
+        int commentCount = 0)
     {
         Id = id;
         Title = title;
@@ -91,6 +95,7 @@ public sealed class STNewsArticleSummary
         RoundId = roundId;
         PublishTime = publishTime;
         EmbedColor = embedColor;
+        CommentCount = commentCount;
     }
 }
 
@@ -100,6 +105,7 @@ public sealed class STNewsArticleSummary
 public static class STNewsConstants
 {
     public const int MaxTitleLength = 50;
-    public const int MaxContentLength = 2048;
+    public const int MaxContentLength = 65000;
     public const int PreviewLength = 150;
+    public const int MaxCommentLength = 500;
 }
