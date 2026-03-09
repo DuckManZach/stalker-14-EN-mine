@@ -17,6 +17,7 @@ using Content.Shared._Stalker_EN.FactionRelations;
 using Content.Shared._Stalker_EN.News;
 using Robust.Shared.Configuration;
 using Robust.Shared.Prototypes;
+using Robust.Shared.Player;
 using Robust.Shared.Timing;
 using Robust.Shared.Utility;
 
@@ -26,7 +27,7 @@ namespace Content.Server._Stalker_EN.News;
 /// Server system for the Stalker News PDA cartridge program.
 /// Manages article publishing, deletion, comments, database persistence, Discord webhook, and broadcast updates.
 /// </summary>
-public sealed class STNewsSystem : EntitySystem
+public sealed partial class STNewsSystem : EntitySystem
 {
     [Dependency] private readonly CartridgeLoaderSystem _cartridgeLoader = default!;
     [Dependency] private readonly AccessReaderSystem _accessReader = default!;
@@ -88,6 +89,20 @@ public sealed class STNewsSystem : EntitySystem
         _config.UnsubValueChanged(STCCVars.NewsWebhook, OnWebhookChanged);
     }
 
+    public override void Update(float frameTime)
+    {
+        base.Update(frameTime);
+
+        if (!_reactionBroadcastPending)
+            return;
+
+        if (_timing.CurTime < _nextReactionBroadcast)
+            return;
+
+        _reactionBroadcastPending = false;
+        BroadcastUiUpdate();
+    }
+
     private void OnWebhookChanged(string value)
     {
         if (!string.IsNullOrWhiteSpace(value))
@@ -147,6 +162,9 @@ public sealed class STNewsSystem : EntitySystem
             }
 
             _cachedSummaries = null;
+
+            // Load reactions for cached articles
+            LoadReactionsFromDatabaseAsync();
         }
         catch (Exception e)
         {
@@ -216,9 +234,11 @@ public sealed class STNewsSystem : EntitySystem
         var canWrite = HasJournalistAccessForLoader(args.Loader);
         var deletableIds = GetDeletableArticleIdsForLoader(args.Loader);
         var newCommentIds = GetNewCommentArticleIds(comp);
+        var viewerUserId = ResolveViewerUserId(args.Loader);
+        var articleReactions = BuildAllArticleReactions(viewerUserId);
         var state = new STNewsUiState(
             GetCachedSummaries(), canWrite, openArticleId, openArticle, newIds,
-            canDelete, comments, deletableIds, newCommentIds);
+            canDelete, comments, deletableIds, newCommentIds, articleReactions);
         _cartridgeLoader.UpdateCartridgeUiState(args.Loader, state);
     }
 
@@ -262,6 +282,7 @@ public sealed class STNewsSystem : EntitySystem
         _activeLoaders.Clear();
         _allLoaders.Clear();
         _cachedSummaries = null;
+        _reactionBroadcastPending = false;
     }
 
     #endregion
@@ -283,6 +304,9 @@ public sealed class STNewsSystem : EntitySystem
                 break;
             case STNewsPostCommentEvent comment:
                 OnPostComment(comment, args);
+                break;
+            case STNewsToggleReactionEvent reaction:
+                OnToggleReaction(uid, comp, reaction, args);
                 break;
             case STNewsCloseArticleEvent:
                 OnCloseArticle(uid, comp);
@@ -354,9 +378,11 @@ public sealed class STNewsSystem : EntitySystem
 
         var deletableIds = GetDeletableArticleIds(args.Actor);
         var newCommentIds = GetNewCommentArticleIds(comp);
+        var viewerUserId = ResolveViewerUserId(loaderUid);
+        var articleReactions = BuildAllArticleReactions(viewerUserId);
         var state = new STNewsUiState(
             GetCachedSummaries(), canWrite, request.ArticleId, article, newIds,
-            canDelete, comments, deletableIds, newCommentIds);
+            canDelete, comments, deletableIds, newCommentIds, articleReactions);
         _cartridgeLoader.UpdateCartridgeUiState(loaderUid, state);
     }
 
@@ -386,6 +412,7 @@ public sealed class STNewsSystem : EntitySystem
             }
         }
         _comments.Remove(delete.ArticleId);
+        RemoveReactionCacheForArticle(delete.ArticleId);
         _cachedSummaries = null;
 
         _adminLogger.Add(
@@ -394,6 +421,7 @@ public sealed class STNewsSystem : EntitySystem
             $"{ToPrettyString(args.Actor):player} deleted news article #{delete.ArticleId}: \"{article.Title}\"");
 
         DeleteArticleAsync(delete.ArticleId);
+        DeleteReactionsForArticleAsync(delete.ArticleId);
 
         BroadcastUiUpdate();
     }
@@ -502,9 +530,11 @@ public sealed class STNewsSystem : EntitySystem
 
             var deletableIds = GetDeletableArticleIdsForLoader(loaderUid);
             var newCommentIds = GetNewCommentArticleIds(newsComp);
+            var viewerUserId = ResolveViewerUserId(loaderUid);
+            var articleReactions = BuildAllArticleReactions(viewerUserId);
             var state = new STNewsUiState(
                 summaries, canWrite, openArticleId, openArticle, newIds,
-                canDelete, openComments, deletableIds, newCommentIds);
+                canDelete, openComments, deletableIds, newCommentIds, articleReactions);
             _cartridgeLoader.UpdateCartridgeUiState(loaderUid, state);
         }
     }
@@ -568,7 +598,12 @@ public sealed class STNewsSystem : EntitySystem
             var maxCached = _config.GetCVar(STCCVars.NewsMaxCachedArticles);
             _articles.Insert(0, article);
             if (_articles.Count > maxCached)
+            {
+                var evicted = _articles[_articles.Count - 1];
                 _articles.RemoveAt(_articles.Count - 1);
+                _comments.Remove(evicted.Id);
+                RemoveReactionCacheForArticle(evicted.Id);
+            }
 
             _cachedSummaries = null;
 
@@ -733,10 +768,12 @@ public sealed class STNewsSystem : EntitySystem
         if (_cachedSummaries != null)
             return _cachedSummaries;
 
+        var trendingThreshold = _config.GetCVar(STCCVars.NewsTrendingThreshold);
         var summaries = new List<STNewsArticleSummary>(_articles.Count);
         foreach (var article in _articles)
         {
             var commentCount = _comments.TryGetValue(article.Id, out var comments) ? comments.Count : 0;
+            var isTrending = GetTotalReactionCount(article.Id) >= trendingThreshold;
             summaries.Add(new STNewsArticleSummary(
                 article.Id,
                 article.Title,
@@ -745,7 +782,8 @@ public sealed class STNewsSystem : EntitySystem
                 article.RoundId,
                 article.PublishTime,
                 article.EmbedColor,
-                commentCount));
+                commentCount,
+                isTrending));
         }
 
         _cachedSummaries = summaries;
@@ -820,6 +858,25 @@ public sealed class STNewsSystem : EntitySystem
         }
 
         return ids;
+    }
+
+    /// <summary>
+    /// Resolves the persistent UserId for the holder of a loader (PDA).
+    /// Returns Guid.Empty if the holder has no ActorComponent.
+    /// </summary>
+    private Guid ResolveViewerUserId(EntityUid loaderUid)
+    {
+        if (!TryComp<TransformComponent>(loaderUid, out var xform))
+            return Guid.Empty;
+
+        var holder = xform.ParentUid;
+        if (!holder.IsValid())
+            return Guid.Empty;
+
+        if (!TryComp<ActorComponent>(holder, out var actor))
+            return Guid.Empty;
+
+        return actor.PlayerSession.UserId.UserId;
     }
 
     private static string StripAndTruncate(string content, int maxLength)
