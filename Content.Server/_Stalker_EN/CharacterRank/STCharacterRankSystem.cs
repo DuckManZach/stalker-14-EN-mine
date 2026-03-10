@@ -1,13 +1,12 @@
-using Content.Server.Afk;
 using Content.Server.Afk.Events;
 using Content.Server.Database;
 using Content.Server.GameTicking;
+using Content.Server.Players.PlayTimeTracking;
 using Content.Shared._Stalker_EN.CharacterRank;
 using Content.Shared.GameTicking;
 using Content.Shared.Mobs;
 using Content.Shared.Mobs.Components;
-using Content.Shared.StatusIcon;
-using Robust.Server.Player;
+using Content.Shared.Players.PlayTimeTracking;
 using Robust.Shared.Player;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Timing;
@@ -21,9 +20,9 @@ namespace Content.Server._Stalker_EN.CharacterRank;
 public sealed class STCharacterRankSystem : EntitySystem
 {
     [Dependency] private readonly IServerDbManager _db = default!;
-    [Dependency] private readonly IPlayerManager _players = default!;
     [Dependency] private readonly IPrototypeManager _proto = default!;
     [Dependency] private readonly IGameTiming _timing = default!;
+    [Dependency] private readonly PlayTimeTrackingManager _playtime = default!;
 
     private static readonly ProtoId<STCharacterRankPrototype> DefaultConfig = "Default";
 
@@ -110,11 +109,23 @@ public sealed class STCharacterRankSystem : EntitySystem
 
         _tracked[uid] = data;
 
+        // Capture overall playtime to seed new characters.
+        TimeSpan? overallPlaytime = null;
+        if (_playtime.TryGetTrackerTimes(args.Player, out var times)
+            && times.TryGetValue(PlayTimeTrackingShared.TrackerOverall, out var overall))
+        {
+            overallPlaytime = overall;
+        }
+
         // Load existing time from database.
-        LoadFromDbAsync(uid, comp, data);
+        LoadFromDbAsync(uid, comp, data, overallPlaytime);
     }
 
-    private async void LoadFromDbAsync(EntityUid uid, STCharacterRankComponent comp, CharacterRankTrackingData data)
+    private async void LoadFromDbAsync(
+        EntityUid uid,
+        STCharacterRankComponent comp,
+        CharacterRankTrackingData data,
+        TimeSpan? overallPlaytime)
     {
         try
         {
@@ -127,6 +138,12 @@ public sealed class STCharacterRankSystem : EntitySystem
             if (record != null)
             {
                 data.AccumulatedTime = record.TimeSpent;
+            }
+            else if (overallPlaytime.HasValue)
+            {
+                // Seed new characters from the player's overall playtime.
+                data.AccumulatedTime = overallPlaytime.Value;
+                SaveSingleToDb(data);
             }
 
             UpdateRank(uid, comp, data);

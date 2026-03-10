@@ -12,7 +12,7 @@ namespace Content.Shared._Stalker_EN.CharacterRank;
 public sealed partial class STCharacterRankComponent : Component
 {
     /// <summary>
-    /// Current rank index (0-31), networked for client display.
+    /// Current rank index (0-7), networked for client display.
     /// </summary>
     [DataField, AutoNetworkedField]
     public int RankIndex;
@@ -21,13 +21,13 @@ public sealed partial class STCharacterRankComponent : Component
     /// The JobIcon prototype ID for the current rank, networked for client icon rendering.
     /// </summary>
     [DataField, AutoNetworkedField]
-    public ProtoId<JobIconPrototype> RankIconId = "STRankNovice1";
+    public ProtoId<JobIconPrototype> RankIconId = "STRankNovice";
 
     /// <summary>
     /// Localization key for the rank's display name. Server-only to avoid dirtying on every flush.
     /// </summary>
     [DataField]
-    public LocId RankName = "st-rank-novice-1";
+    public LocId RankName = "st-rank-novice";
 
     /// <summary>
     /// Total accumulated active playtime. Server-only to avoid dirtying on every flush.

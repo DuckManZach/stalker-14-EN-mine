@@ -27,7 +27,7 @@ public sealed partial class STCharacterRankPrototype : IPrototype
 public sealed partial class STRankDefinition
 {
     /// <summary>
-    /// Zero-based index of this rank (0-31).
+    /// Zero-based index of this rank (0-7).
     /// </summary>
     [DataField(required: true)]
     public int Index { get; set; }
