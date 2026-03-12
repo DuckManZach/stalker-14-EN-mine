@@ -1,3 +1,4 @@
+/* stalker-en-changes - use native triggers instead
 using Content.Server._Stalker.Anomaly.Triggers.Systems;
 using Content.Shared._Stalker.Anomaly.Triggers.Events;
 using Content.Shared.Whitelist;
@@ -34,3 +35,4 @@ public sealed class STAnomalyTriggerStartCollideSystem : EntitySystem
         _anomalyTrigger.Trigger(trigger, groups);
     }
 }
+*/

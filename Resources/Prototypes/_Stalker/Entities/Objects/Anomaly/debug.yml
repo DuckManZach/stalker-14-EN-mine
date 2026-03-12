@@ -3,19 +3,12 @@
   id: STAnomalyDebug
   suffix: ST, DEBUG, Anomaly
   components:
-    - type: STAnomalyTriggerGroupsStateTransition
-    - type: STAnomalyTriggerStartCollide
-      blacklist:
+    - type: TriggerOnCollide
+      fixtureID: fix1
+    - type: WhitelistTriggerCondition
+      userBlacklist:
         components:
-          - Projectile
-    - type: STAnomalyTriggerTimeDelay
-      options:
-        ActiveSmall:
-          group: TimeDelayActive
-          delay: 5
-        ActiveNormal:
-          group: TimeDelayActive
-          delay: 10
+        - Projectile
     - type: STAnomaly
       state: Idle
       states:

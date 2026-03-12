@@ -1,4 +1,5 @@
-﻿namespace Content.Server._Stalker.Anomaly.Triggers.StateTransition;
+﻿/* stalker-en-changes - trigger rework
+namespace Content.Server._Stalker.Anomaly.Triggers.StateTransition;
 
 [RegisterComponent]
 public sealed partial class STAnomalyTriggerGroupsStateTransitionComponent : Component
@@ -6,3 +7,4 @@ public sealed partial class STAnomalyTriggerGroupsStateTransitionComponent : Com
     [DataField]
     public string Prefix = "State";
 }
+*/

@@ -1,4 +1,5 @@
-﻿using Content.Server._Stalker.Anomaly.TargetGroups.Weight;
+﻿/* stalker-en-changes - use native triggers instead
+using Content.Server._Stalker.Anomaly.TargetGroups.Weight;
 using Content.Shared._Stalker.Anomaly.Triggers.Events;
 using Content.Shared._Stalker.Weight;
 using Content.Shared.Whitelist;
@@ -27,3 +28,4 @@ public sealed class STAnomalyTriggerStartCollideGroupsSystem : EntitySystem
         }
     }
 }
+*/

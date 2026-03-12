@@ -17,12 +17,12 @@ public sealed class STAnomalyEffectExplosionSystem : EntitySystem
 
     private void OnTriggered(Entity<STAnomalyEffectExplosionComponent> effect, ref STAnomalyTriggerEvent args)
     {
-        foreach (var group in args.Groups)
-        {
-            if (!effect.Comp.Options.TryGetValue(group, out var option))
-                continue;
-
-            _explosion.QueueExplosion(effect, option.Id, option.Intensity, option.Slope, option.MaxIntensity, canCreateVacuum: false, addLog: false);
-        }
+        // foreach (var group in args.Groups)
+        // {
+        //     if (!effect.Comp.Options.TryGetValue(group, out var option))
+        //         continue;
+        //
+        //     _explosion.QueueExplosion(effect, option.Id, option.Intensity, option.Slope, option.MaxIntensity, canCreateVacuum: false, addLog: false);
+        // }
     }
 }

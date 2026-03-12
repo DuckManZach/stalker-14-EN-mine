@@ -18,18 +18,18 @@ public sealed class STAnomalyEffectDamageSystem : EntitySystem
 
     private void OnTriggered(Entity<Components.STAnomalyEffectDamageComponent> effect, ref STAnomalyTriggerEvent args)
     {
-        foreach (var group in args.Groups)
-        {
-            if (!effect.Comp.Options.TryGetValue(group, out var options))
-                continue;
-
-            var entities =
-                _entityLookup.GetEntitiesInRange<DamageableComponent>(Transform(effect).Coordinates, options.Range, LookupFlags.Uncontained);
-
-            foreach (var entity in entities)
-            {
-                _damageable.TryChangeDamage(entity.AsNullable(), options.Damage);
-            }
-        }
+        // foreach (var group in args.Groups)
+        // {
+        //     if (!effect.Comp.Options.TryGetValue(group, out var options))
+        //         continue;
+        //
+        //     var entities =
+        //         _entityLookup.GetEntitiesInRange<DamageableComponent>(Transform(effect).Coordinates, options.Range, LookupFlags.Uncontained);
+        //
+        //     foreach (var entity in entities)
+        //     {
+        //         _damageable.TryChangeDamage(entity.AsNullable(), options.Damage);
+        //     }
+        // }
     }
 }

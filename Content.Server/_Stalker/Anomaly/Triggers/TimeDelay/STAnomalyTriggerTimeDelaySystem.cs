@@ -1,4 +1,5 @@
-﻿using Content.Server._Stalker.Anomaly.Triggers.Systems;
+﻿/* stalker-en-changes - trigger rework
+using Content.Server._Stalker.Anomaly.Triggers.Systems;
 using Content.Shared._Stalker.Anomaly.Triggers.Events;
 using Robust.Shared.Timing;
 
@@ -54,3 +55,4 @@ public sealed class STAnomalyTriggerTimeDelaySystem : EntitySystem
         public readonly STAnomalyTriggerRimeDelayOptions Options = options;
     }
 }
+*/

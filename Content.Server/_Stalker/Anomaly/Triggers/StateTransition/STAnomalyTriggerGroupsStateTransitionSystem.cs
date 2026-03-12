@@ -1,4 +1,5 @@
-﻿using Content.Server._Stalker.Anomaly.Triggers.Systems;
+﻿/* stalker-en-changes - trigger rework
+using Content.Server._Stalker.Anomaly.Triggers.Systems;
 using Content.Shared._Stalker.Anomaly.Triggers.Events;
 
 namespace Content.Server._Stalker.Anomaly.Triggers.StateTransition;
@@ -20,3 +21,4 @@ public sealed class STAnomalyTriggerGroupsStateTransitionSystem : EntitySystem
         _trigger.Trigger(trigger, group, false);
     }
 }
+*/

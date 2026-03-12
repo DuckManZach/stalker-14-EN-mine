@@ -13,7 +13,8 @@
   id: ZoneAnomalyElectra
   suffix: Stalker, Electra, Anomaly
   components:
-    - type: ZoneAnomalyUpdateTriggerCollide
+    - type: TriggerOnCollide
+      fixtureID: fix1
     - type: ZoneAnomalyEffectDamage
       damage:
         types:
@@ -68,7 +69,8 @@
   name: EMP anomaly
   suffix: Stalker, EMP, Anomaly
   components:
-    - type: ZoneAnomalyUpdateTriggerCollide
+    - type: TriggerOnCollide
+      fixtureID: fix1
     - type: ZoneAnomalyEffectDamage
       damage:
         types:
@@ -142,8 +144,8 @@
       tags:
         - AnomalyGarlandActivationTarget
         - HideContextMenu
-    - type: ZoneAnomalyTriggerStartCollide
-    - type: ZoneAnomalyTriggerEndCollide
+    - type: TriggerOnCollide
+      fixtureID: fix1
     - type: ZoneAnomalyEffectLightArc
       whitelist:
         components:

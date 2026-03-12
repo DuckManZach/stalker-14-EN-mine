@@ -1,4 +1,6 @@
-﻿using Content.Shared._Stalker.Anomaly.Triggers.Events;
+﻿/* stalker-en-changes - moved to our namespace
+// we have entirely reworked groups, so
+using Content.Shared._Stalker.Anomaly.Triggers.Events;
 
 namespace Content.Server._Stalker.Anomaly.Triggers.Systems;
 
@@ -28,3 +30,4 @@ public sealed class STAnomalyTriggerSystem : EntitySystem
         RaiseLocalEvent(anomaly, ev);
     }
 }
+*/

@@ -17,15 +17,15 @@ public sealed class STAnomalySystem : EntitySystem
 
     private void OnTrigger(Entity<STAnomalyComponent> anomaly, ref STAnomalyTriggerEvent args)
     {
-        if (!args.StateChanger)
-            return;
+        // if (!args.StateChanger)
+        //     return;
 
         var transitions = anomaly.Comp.States[anomaly.Comp.State];
 
         foreach (var transition in transitions)
         {
-            if (!args.Groups.Contains(transition.Group))
-                continue;
+            // if (!args.Groups.Contains(transition.Group))
+            //     continue;
 
             SetState(anomaly, transition.State);
             break;

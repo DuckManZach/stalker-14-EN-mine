@@ -3,24 +3,12 @@
   id: STAnomalyBarrier
   suffix: ST, Anomaly, Barrier
   components:
-  - type: STAnomalyTriggerGroupsStateTransition
-  - type: STAnomalyTriggerStartCollide
-    blacklist:
+  - type: StepTrigger
+  - type: TriggerOnStepTrigger
+  - type: WhitelistTriggerCondition
+    userBlacklist:
       components:
       - Projectile
-  - type: STAnomalyTriggerStartCollideWeight
-    weightTriggerGroup:
-      0: Weightless
-      0.1: WeightSmall
-      10: WeightNormal
-  - type: STAnomalyTriggerTimeDelay
-    options:
-      ActiveSmall:
-        group: TimeDelayActive
-        delay: 3
-      ActiveNormal:
-        group: TimeDelayActive
-        delay: 10
   - type: STAnomaly
     state: Idle
     states:
@@ -71,24 +59,12 @@
   id: STAnomalyHush
   suffix: ST, Anomaly, Hush
   components:
-  - type: STAnomalyTriggerGroupsStateTransition
-  - type: STAnomalyTriggerStartCollide
-    blacklist:
+  - type: TriggerOnCollide
+    fixtureID: fix1
+  - type: WhitelistTriggerCondition
+    userBlacklist:
       components:
       - Projectile
-  - type: STAnomalyTriggerStartCollideWeight
-    weightTriggerGroup:
-      0: Weightless
-      0.1: WeightSmall
-      10: WeightNormal
-  - type: STAnomalyTriggerTimeDelay
-    options:
-      ActiveSmall:
-        group: TimeDelayActive
-        delay: 1
-      ActiveNormal:
-        group: TimeDelayActive
-        delay: 60
   - type: STAnomaly
     state: Idle
     states:
@@ -149,11 +125,8 @@
   id: STAnomalyBubble
   suffix: ST, Anomaly, Bubble, Outdise
   components:
-  - type: STAnomalyTriggerGroupsStateTransition
-  - type: STAnomalyTriggerStartCollide
-    blacklist:
-      components:
-      - Projectile
+  - type: TriggerOnCollide
+    fixtureID: fix1
   - type: STAnomaly
     state: Idle
     states:

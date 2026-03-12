@@ -1,4 +1,5 @@
-﻿namespace Content.Server._Stalker.Anomaly.TargetGroups.Weight;
+﻿/* stalker-en-changes - use native triggers instead
+namespace Content.Server._Stalker.Anomaly.TargetGroups.Weight;
 
 [RegisterComponent]
 public sealed partial class STAnomalyTriggerStartCollideWeightComponent : Component
@@ -10,3 +11,4 @@ public sealed partial class STAnomalyTriggerStartCollideWeightComponent : Compon
         { 20, "WeightNormal" },
     };
 }
+*/

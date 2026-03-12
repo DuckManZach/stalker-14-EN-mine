@@ -17,12 +17,12 @@ public sealed class STAnomalyEffectSoundSystem : EntitySystem
 
     private void OnTriggered(Entity<STAnomalyEffectSoundComponent> effect, ref STAnomalyTriggerEvent args)
     {
-        foreach (var group in args.Groups)
-        {
-            if (!effect.Comp.Options.TryGetValue(group, out var options))
-                continue;
-
-            _audio.PlayPredicted(options.Sound, Transform(effect).Coordinates, effect);
-        }
+        // foreach (var group in args.Groups)
+        // {
+        //     if (!effect.Comp.Options.TryGetValue(group, out var options))
+        //         continue;
+        //
+        //     _audio.PlayPredicted(options.Sound, Transform(effect).Coordinates, effect);
+        // }
     }
 }

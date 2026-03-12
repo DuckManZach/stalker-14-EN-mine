@@ -35,12 +35,12 @@ public sealed class STAnomalyEffectDamageSoundConditionalSystem : EntitySystem
             _audio.PlayPredicted(comp.PassthroughSound, coords, effect);
 
         // Check if this is a damage-dealing trigger (must have one of the damage groups)
-        var isDouble = args.Groups.Contains(comp.DoubleDamageGroup);
-        var isBase = args.Groups.Contains(comp.BaseDamageGroup);
+        // var isDouble = args.Groups.Contains(comp.DoubleDamageGroup);
+        // var isBase = args.Groups.Contains(comp.BaseDamageGroup);
 
         // No damage groups present - don't play any hit sound
-        if (!isDouble && !isBase)
-            return;
+        // if (!isDouble && !isBase)
+        //     return;
 
         // Find entities in range that might be damaged
         var entities = _entityLookup.GetEntitiesInRange<STWeightComponent>(coords, comp.Range, LookupFlags.Uncontained);
@@ -56,7 +56,7 @@ public sealed class STAnomalyEffectDamageSoundConditionalSystem : EntitySystem
         }
 
         // No heavy entity - play sound based on damage type
-        var sound = isDouble ? comp.DoubleDamageSound : comp.BaseDamageSound;
+        var sound = comp.BaseDamageSound;
 
         if (sound != null)
             _audio.PlayPredicted(sound, coords, effect);

@@ -1,4 +1,5 @@
-﻿using Content.Shared.Whitelist;
+﻿/* stalker-en-changes - use native triggers instead
+ using Content.Shared.Whitelist;
 
 namespace Content.Server._Stalker.Anomaly.Triggers.StartCollide;
 
@@ -11,3 +12,4 @@ public sealed partial class STAnomalyTriggerStartCollideComponent : Component
     [DataField]
     public string MainTriggerGroup = "StartCollide";
 }
+*/

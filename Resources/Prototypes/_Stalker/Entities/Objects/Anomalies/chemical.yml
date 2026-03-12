@@ -24,7 +24,8 @@
   parent: ZoneAnomalyBaseChemical
   suffix: Stalker, Kissel, Anomaly
   components:
-    - type: ZoneAnomalyUpdateTriggerCollide
+    - type: TriggerOnCollide
+      fixtureID: fix1
     - type: ZoneAnomalyEffectDamage
       damage:
         types:
@@ -68,7 +69,8 @@
   id: ZoneAnomalyGazirovka
   suffix: Stalker, Gazirovka, Anomaly
   components:
-    - type: ZoneAnomalyUpdateTriggerCollide
+    - type: TriggerOnCollide
+      fixtureID: fix1
     - type: ZoneAnomalyEffectDamage
       damage:
         types:
@@ -118,10 +120,12 @@
       energy: 3
       color: "Yellow"
       castShadows: false
-    - type: ZoneAnomalyUpdateTriggerCollide
-      blacklist:
+    - type: TriggerOnCollide
+      fixtureID: fix1
+    - type: WhitelistTriggerCondition
+      userBlacklist:
         components:
-          - Smoke
+        - Smoke
     - type: ZoneAnomalyEffectFoam
       reagent: AbsoluteAbsorber
       reagentAmount: 20

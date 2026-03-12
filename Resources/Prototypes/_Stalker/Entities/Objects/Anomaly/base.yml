@@ -21,3 +21,4 @@
         - LowImpassable
   - type: STAnomaly
   - type: STAnomalyTips
+  - type: STTriggerConvert # stalker-en - Convert normal triggers to Anomaly triggers

@@ -25,25 +25,25 @@ public sealed class STAnomalyEffectDamageWeightBonusSystem : EntitySystem
         Entity<STAnomalyEffectDamageWeightBonusComponent> effect,
         ref STAnomalyTriggerEvent args)
     {
-        foreach (var group in args.Groups)
-        {
-            if (!effect.Comp.Options.TryGetValue(group, out var options))
-                continue;
-
-            var entities =
-                _entityLookup.GetEntitiesInRange<STWeightComponent>(Transform(effect).Coordinates, options.Range, LookupFlags.Uncontained);
-
-            foreach (var entity in entities)
-            {
-                var bonus = CalculateWeightBonus(entity.Comp.Total, effect.Comp);
-                if (bonus <= 0)
-                    continue;
-
-                // Apply bonus damage (base damage * bonus multiplier)
-                var bonusDamage = options.Damage * bonus;
-                _damageable.TryChangeDamage(entity.Owner, bonusDamage);
-            }
-        }
+        // foreach (var group in args.Groups)
+        // {
+        //     if (!effect.Comp.Options.TryGetValue(group, out var options))
+        //         continue;
+        //
+        //     var entities =
+        //         _entityLookup.GetEntitiesInRange<STWeightComponent>(Transform(effect).Coordinates, options.Range, LookupFlags.Uncontained);
+        //
+        //     foreach (var entity in entities)
+        //     {
+        //         var bonus = CalculateWeightBonus(entity.Comp.Total, effect.Comp);
+        //         if (bonus <= 0)
+        //             continue;
+        //
+        //         // Apply bonus damage (base damage * bonus multiplier)
+        //         var bonusDamage = options.Damage * bonus;
+        //         _damageable.TryChangeDamage(entity.Owner, bonusDamage);
+        //     }
+        // }
     }
 
     private float CalculateWeightBonus(

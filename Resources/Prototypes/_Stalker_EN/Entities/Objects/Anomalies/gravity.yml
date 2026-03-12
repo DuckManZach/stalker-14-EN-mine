@@ -5,9 +5,11 @@
   suffix: Stalker, GlassShards, Anomaly
   description: A field of nearly invisible glass shards that cut through anyone running carelessly.
   components:
-  - type: STAnomalyTriggerGroupsStateTransition
-  - type: STAnomalyTriggerStartCollide
-    blacklist:
+  - type: TriggerOnProximity
+    cooldown: 5
+    repeating: false
+  - type: WhitelistTriggerCondition
+    userBlacklist:
       components:
       - Projectile
   - type: STAnomalyTriggerStartCollideSprinting

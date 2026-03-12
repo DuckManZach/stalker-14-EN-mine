@@ -27,43 +27,43 @@ public sealed class STAnomalyEffectTunnelSystem : EntitySystem
 
     private void OnTriggered(Entity<STAnomalyEffectTunnelComponent> entity, ref STAnomalyTriggerEvent args)
     {
-        foreach (var group in args.Groups)
-        {
-            if (!entity.Comp.Options.TryGetValue(group, out var options))
-                continue;
-
-            if (options.Type == STAnomalyEffectTunnelType.Exit)
-                continue;
-
-            var maps = new List<MapId>();
-            foreach (var map in options.Maps)
-            {
-                if (!_mapKey.TryGet(map, out var mapEntity))
-                    continue;
-
-                maps.Add(mapEntity.Value.Comp.MapId);
-            }
-
-            var destinations = GetDestinations(maps, group);
-            if (destinations.Count == 0)
-                continue;
-
-            var entities = _entityLookup.GetEntitiesInRange<TransformComponent>(Transform(entity).Coordinates, options.Range);
-            foreach (var targetEntity in entities)
-            {
-                if (targetEntity.Comp.Anchored)
-                    continue;
-
-                if (!STUtilsMap.InWorld((targetEntity, targetEntity), EntityManager))
-                    continue;
-
-                if (_whitelistSystem.IsWhitelistFail(options.Whitelist, targetEntity))
-                    continue;
-
-                var destination = _random.Pick(destinations);
-                _transform.SetCoordinates(targetEntity, Transform(destination).Coordinates);
-            }
-        }
+        // foreach (var group in args.Groups)
+        // {
+        //     if (!entity.Comp.Options.TryGetValue(group, out var options))
+        //         continue;
+        //
+        //     if (options.Type == STAnomalyEffectTunnelType.Exit)
+        //         continue;
+        //
+        //     var maps = new List<MapId>();
+        //     foreach (var map in options.Maps)
+        //     {
+        //         if (!_mapKey.TryGet(map, out var mapEntity))
+        //             continue;
+        //
+        //         maps.Add(mapEntity.Value.Comp.MapId);
+        //     }
+        //
+        //     var destinations = GetDestinations(maps, group);
+        //     if (destinations.Count == 0)
+        //         continue;
+        //
+        //     var entities = _entityLookup.GetEntitiesInRange<TransformComponent>(Transform(entity).Coordinates, options.Range);
+        //     foreach (var targetEntity in entities)
+        //     {
+        //         if (targetEntity.Comp.Anchored)
+        //             continue;
+        //
+        //         if (!STUtilsMap.InWorld((targetEntity, targetEntity), EntityManager))
+        //             continue;
+        //
+        //         if (_whitelistSystem.IsWhitelistFail(options.Whitelist, targetEntity))
+        //             continue;
+        //
+        //         var destination = _random.Pick(destinations);
+        //         _transform.SetCoordinates(targetEntity, Transform(destination).Coordinates);
+        //     }
+        // }
     }
 
     private List<EntityUid> GetDestinations(List<MapId> maps, string group)

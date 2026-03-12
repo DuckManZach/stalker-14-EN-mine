@@ -30,3 +30,4 @@
   - type: STAnomalyTips
   - type: ESViewconeOccludable
   - type: IgnorePredictionHit
+  - type: STTriggerConvert # stalker-en - Convert normal triggers to Anomaly triggers

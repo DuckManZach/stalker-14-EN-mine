@@ -24,35 +24,35 @@ public sealed class STAnomalyEffectThrowSystem : EntitySystem
 
     private void OnTriggered(Entity<STAnomalyEffectThrowComponent> effect, ref STAnomalyTriggerEvent args)
     {
-        foreach (var group in args.Groups)
-        {
-            if (!effect.Comp.Options.TryGetValue(group, out var options))
-                continue;
-
-            var entities =
-                _entityLookup.GetEntitiesInRange<PhysicsComponent>(Transform(effect).Coordinates, options.Range);
-
-            foreach (var entity in entities)
-            {
-                switch (options.Type)
-                {
-                    case STAnomalyEffectThrowType.RandomDirection:
-                        ThrowRandomDirection(effect, options, entity);
-                        break;
-
-                    case STAnomalyEffectThrowType.FromAnomaly:
-                        ThrowFromAnomaly(effect, options, entity);
-                        break;
-
-                    case STAnomalyEffectThrowType.ToAnomaly:
-                        ThrowToAnomaly(effect, options, entity);
-                        break;
-
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
-            }
-        }
+        // foreach (var group in args.Groups)
+        // {
+        //     if (!effect.Comp.Options.TryGetValue(group, out var options))
+        //         continue;
+        //
+        //     var entities =
+        //         _entityLookup.GetEntitiesInRange<PhysicsComponent>(Transform(effect).Coordinates, options.Range);
+        //
+        //     foreach (var entity in entities)
+        //     {
+        //         switch (options.Type)
+        //         {
+        //             case STAnomalyEffectThrowType.RandomDirection:
+        //                 ThrowRandomDirection(effect, options, entity);
+        //                 break;
+        //
+        //             case STAnomalyEffectThrowType.FromAnomaly:
+        //                 ThrowFromAnomaly(effect, options, entity);
+        //                 break;
+        //
+        //             case STAnomalyEffectThrowType.ToAnomaly:
+        //                 ThrowToAnomaly(effect, options, entity);
+        //                 break;
+        //
+        //             default:
+        //                 throw new ArgumentOutOfRangeException();
+        //         }
+        //     }
+        // }
     }
 
     private void ThrowRandomDirection(Entity<STAnomalyEffectThrowComponent> effect, STAnomalyEffectThrowOptions options, EntityUid target)

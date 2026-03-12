@@ -21,27 +21,27 @@ public sealed class STAnomalyEffectEnterDimensionSystem : EntitySystem
 
     private void OnTriggered(Entity<STAnomalyEffectEnterDimensionComponent> effect, ref STAnomalyTriggerEvent args)
     {
-        foreach (var group in args.Groups)
-        {
-            if (!effect.Comp.Options.TryGetValue(group, out var options))
-                continue;
-
-            var entities =
-                _entityLookup.GetEntitiesInRange<TransformComponent>(Transform(effect).Coordinates, options.Range);
-
-            foreach (var entity in entities)
-            {
-                if (entity.Comp.Anchored)
-                    continue;
-
-                if (!STUtilsMap.InWorld((entity, entity), EntityManager))
-                    continue;
-
-                if (_whitelistSystem.IsWhitelistFail(options.Whitelist, entity))
-                    continue;
-
-                _dimension.EnterDimension(entity, options.Dimension);
-            }
-        }
+        // foreach (var group in args.Groups)
+        // {
+        //     if (!effect.Comp.Options.TryGetValue(group, out var options))
+        //         continue;
+        //
+        //     var entities =
+        //         _entityLookup.GetEntitiesInRange<TransformComponent>(Transform(effect).Coordinates, options.Range);
+        //
+        //     foreach (var entity in entities)
+        //     {
+        //         if (entity.Comp.Anchored)
+        //             continue;
+        //
+        //         if (!STUtilsMap.InWorld((entity, entity), EntityManager))
+        //             continue;
+        //
+        //         if (_whitelistSystem.IsWhitelistFail(options.Whitelist, entity))
+        //             continue;
+        //
+        //         _dimension.EnterDimension(entity, options.Dimension);
+        //     }
+        // }
     }
 }
