@@ -4,6 +4,9 @@ using Robust.Shared.Prototypes;
 
 namespace Content.Shared._Stalker.ZoneAnomaly.Triggers;
 
+/// <summary>
+/// Boilerplate for anomalies that trigger on collision
+/// </summary>
 public abstract partial class ZoneAnomalyTriggerCollideComponent : Component
 {
     /// <summary>

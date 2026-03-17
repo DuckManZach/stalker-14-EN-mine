@@ -1,3 +1,4 @@
+using System.Linq;
 using Content.Shared._Stalker.ZoneAnomaly.Components;
 using Content.Shared.Whitelist;
 using Robust.Shared.Physics.Events;
@@ -34,15 +35,17 @@ public sealed class ZoneAnomalyTriggerCollideSystem : EntitySystem
         }
     }
 
+    // stalker-en-changes - Add and remove update activation instead of update
+    // WHEN DOING UPSTREAM MERGES: Make SURE to keep our version of OnEntityAdd and OnEntityRemove
     private void OnEntityAdd(Entity<ZoneAnomalyUpdateTriggerCollideComponent> trigger, ref ZoneAnomalyEntityAddEvent args)
     {
         if (!Validate(args.Entity, trigger, trigger.Comp))
             return;
 
-        if (TryComp<ZoneAnomalyComponent>(trigger, out var anomalyComponent))
-            _anomaly.TryActivate((trigger, anomalyComponent), args.Entity);
+        if (!trigger.Comp.InAnomaly.Add(args.Entity))
+            return;
 
-        trigger.Comp.InAnomaly.Add(args.Entity);
+        TryActivate(args.Entity, (trigger, trigger.Comp));
     }
 
     private void OnEntityRemove(Entity<ZoneAnomalyUpdateTriggerCollideComponent> trigger, ref ZoneAnomalyEntityRemoveEvent args)
@@ -50,28 +53,21 @@ public sealed class ZoneAnomalyTriggerCollideSystem : EntitySystem
         if (!Validate(args.Entity, trigger, trigger.Comp))
             return;
 
-        if (!trigger.Comp.InAnomaly.Contains(args.Entity))
+        if (!trigger.Comp.InAnomaly.Remove(args.Entity))
             return;
 
-        if (TryComp<ZoneAnomalyComponent>(trigger, out var anomalyComponent))
-            _anomaly.TryActivate((trigger, anomalyComponent), args.Entity);
-
-        trigger.Comp.InAnomaly.Remove(args.Entity);
+        TryActivate(args.Entity, (trigger, trigger.Comp));
     }
+    //stalker-en-changes-end
 
     private void OnStartCollide(Entity<ZoneAnomalyTriggerStartCollideComponent> trigger, ref StartCollideEvent args)
     {
-        TryActivate(args.OtherEntity, trigger, trigger.Comp);
+        TryActivate(args.OtherEntity, (trigger, trigger.Comp));
     }
 
     private void OnEndCollide(Entity<ZoneAnomalyTriggerEndCollideComponent> trigger, ref EndCollideEvent args)
     {
-        TryActivate(args.OtherEntity, trigger, trigger.Comp);
-    }
-
-    private void TryActivate(EntityUid target, EntityUid triggerUid, ZoneAnomalyTriggerCollideComponent component)
-    {
-        TryActivate(target, (triggerUid, component));
+        TryActivate(args.OtherEntity, (trigger, trigger.Comp));
     }
 
     private void TryActivate(EntityUid target, Entity<ZoneAnomalyTriggerCollideComponent> trigger)
