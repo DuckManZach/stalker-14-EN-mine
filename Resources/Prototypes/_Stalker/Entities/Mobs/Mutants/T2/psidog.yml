@@ -1,5 +1,5 @@
 - type: entity
-  parent: STBaseMobMutant
+  parent: BaseMobMutant
   id: MutantPsidog
   name: пси-пёс
   suffix: ST, T2
@@ -138,7 +138,7 @@
     # Stalker-EN end
 
 - type: entity
-  parent: STBaseMobMutant
+  parent: BaseMobMutant
   id: MutantPsidogCopy
   name: пси-пёс
   description: Мутировавший волк, обладающий существенными пси-способностями и способный создавать иллюзии. Редкая и очень опасная тварь.
